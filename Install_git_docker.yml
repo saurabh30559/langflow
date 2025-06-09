@@ -27,8 +27,7 @@
           - docker-engine
         state: absent
         autoremove: yes
-        all_matches: yes
-        skip_broken: yes
+
 
     - name: Install required packages
       dnf:
