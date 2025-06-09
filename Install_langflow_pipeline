@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Git and Docker') {
+            steps {
+                sh 'ansible-playbook -i "localhost," -c local Install_git_docker.yml'
+            }
+        }
+
+        stage('Install Langflow in Docker') {
+            steps {
+                sh 'ansible-playbook -i "localhost," -c local Install_langflow.yml'
+            }
+        }
+    }
+}
