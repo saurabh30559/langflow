@@ -1,14 +1,14 @@
 ---
-- name: Deploy Langflow container
+- name: Deploy Langflow container on RHEL
   hosts: localhost
   become: yes
+  gather_facts: no
   connection: local
-
   tasks:
-    - name: Pull Langflow Docker image
+    - name: Pull Langflow image
       command: docker pull langflow/langflow:latest
 
-    - name: Stop existing Langflow container if running
+    - name: Stop Langflow container if running
       command: docker stop langflow
       ignore_errors: yes
 
