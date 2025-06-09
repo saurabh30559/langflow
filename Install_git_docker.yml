@@ -1,64 +1,61 @@
 ---
-- name: Install Git and Docker (>=20) on same host
+- name: Install Git and Docker on RHEL
   hosts: localhost
   become: yes
   gather_facts: no
+  connection: local
+
   tasks:
     - name: Install Git
-      apt:
+      yum:
         name: git
         state: present
-        update_cache: yes
 
-    - name: Remove old versions of Docker
-      apt:
+    - name: Remove old Docker versions
+      yum:
         name:
           - docker
+          - docker-client
+          - docker-client-latest
+          - docker-common
+          - docker-latest
+          - docker-latest-logrotate
+          - docker-logrotate
           - docker-engine
-          - docker.io
-          - containerd
-          - runc
         state: absent
-        purge: yes
+        autoremove: yes
 
     - name: Install required dependencies
-      apt:
+      yum:
         name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg
-          - lsb-release
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
         state: present
 
-    - name: Add Docker GPG key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+    - name: Add Docker CE repository
+      command: >
+        yum-config-manager --add-repo
+        https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
 
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-        state: present
-        filename: docker
-
-    - name: Install Docker CE (latest, which is > 20.x)
-      apt:
+    - name: Install Docker CE (latest, typically >= 20.x)
+      yum:
         name:
           - docker-ce
           - docker-ce-cli
           - containerd.io
         state: latest
-        update_cache: yes
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
 
     - name: Add Jenkins user to Docker group
       user:
         name: jenkins
         groups: docker
         append: yes
-
-    - name: Enable and start Docker service
-      systemd:
-        name: docker
-        enabled: yes
-        state: started
