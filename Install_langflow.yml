@@ -1,0 +1,23 @@
+---
+- name: Deploy Langflow container
+  hosts: localhost
+  become: yes
+  connection: local
+
+  tasks:
+    - name: Pull Langflow Docker image
+      command: docker pull langflow/langflow:latest
+
+    - name: Stop existing Langflow container if running
+      command: docker stop langflow
+      ignore_errors: yes
+
+    - name: Remove existing Langflow container if exists
+      command: docker rm langflow
+      ignore_errors: yes
+
+    - name: Run Langflow container
+      command: >
+        docker run -d --name langflow
+        -p 7860:7860
+        langflow/langflow:latest
