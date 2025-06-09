@@ -2,6 +2,7 @@
 - name: Install Git and Docker on RHEL 8/9
   hosts: localhost
   become: yes
+  gather_facts: no
   connection: local
 
   tasks:
