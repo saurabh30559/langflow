@@ -6,6 +6,9 @@
   connection: local
 
   tasks:
+    - name: Get Ip details
+      shell: ip r l
+
     - name: Install Git
       dnf:
         name: git
