@@ -29,6 +29,12 @@
       args:
         creates: /etc/yum.repos.d/docker-ce.repo
 
+    - name: Remove Podman (conflicts with Docker)
+      dnf:
+        name: podman
+        state: absent
+        autoremove: yes
+
     - name: Install Docker CE
       dnf:
         name:
