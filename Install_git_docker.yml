@@ -2,8 +2,7 @@
 - name: Install Git and Docker (>=20) on same host
   hosts: localhost
   become: yes
-  connection: local
-
+  gather_facts: no
   tasks:
     - name: Install Git
       apt:
