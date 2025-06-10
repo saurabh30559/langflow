@@ -1,0 +1,12 @@
+---
+- name: Connectivity check
+  hosts: target_servers
+  gather_facts: no
+  tasks:
+    - name: Run echo command
+      shell: echo 1
+      register: result
+
+    - name: Show result
+      debug:
+        var: result.stdout
